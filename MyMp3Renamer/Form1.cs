@@ -11,7 +11,7 @@ namespace MyMp3Renamer
         }
 
         string[] mp3Files;
-        string mp3Count;
+        string mp3CountString;
         int index;
         bool batchProcess = true;
         private void selectBtn_Click(object sender, EventArgs e)
@@ -22,8 +22,8 @@ namespace MyMp3Renamer
                     string folderPath = dialog.SelectedPath;
                     mp3Files = Directory.GetFiles(folderPath, "*.mp3");
 
-                    mp3Count = $" {index} / {mp3Files.Length} Files Completed";
-                    CountLabel.Text = mp3Count;
+                    mp3CountString = $" {index} / {mp3Files.Length} Files Completed";
+                    CountLabel.Text = mp3CountString;
 
                     FolderNametextBox1.Text = folderPath;
                 }
@@ -31,11 +31,16 @@ namespace MyMp3Renamer
         }
         private void BeginNaming_button_Click(object sender, EventArgs e)
         {
-            GoAllbutton1.Text = "Confirm and Next";
+           if(mp3Files == null || mp3Files.Length == 0) {
+                MessageBox.Show("No Files Found!");
+                return;
+           }
 
             index = 0;
 
             batchProcess = false;
+
+            GoAllbutton1.Text = "Confirm and Next";
 
             GoAlllabel.Text = " Confirm The \n Tag Information";
 
@@ -69,20 +74,14 @@ namespace MyMp3Renamer
             try {
                 var tfile = TagLib.File.Create(filePath);
 
-                //DialogResult result = MessageBox.Show(" Do you want to go ahead? ", "Confirm Action", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                //if (result == DialogResult.Yes) {
-
-                // now putting that value into the tag
-
-                // }
-
                 tfileEditor(tfile);
             }
             catch (Exception ex) {
                 MessageBox.Show($"Error tagging file {filePath}:\n{ex.Message}");
             }
-            mp3Count = $" {index++} / {mp3Files.Length} Files Completed";
-            CountLabel.Text = mp3Count;
+
+            mp3CountString = $" {index++} / {mp3Files.Length} Files Completed";
+            CountLabel.Text = mp3CountString;
 
             if (index < mp3Files.Length) {
 
@@ -116,40 +115,21 @@ namespace MyMp3Renamer
             tfile.Save();
         }
 
-        //private void GoAllbutton1_Click(object sender, EventArgs e)
-        //{
-        //    foreach (string filePath in mp3Files) {
-        //        try {
-        //            var tfile = TagLib.File.Create(filePath);
-        //            string fileName = Path.GetFileNameWithoutExtension(filePath);
-        //            string folderName = new DirectoryInfo(Path.GetDirectoryName(filePath)).Name; // folder that contains the file
+        private void GoAllbutton1_Click(object sender, EventArgs e)
+        {
+            if (mp3Files == null || mp3Files.Length == 0) {
+                MessageBox.Show("No Files Found!");
+                return;
+            }
 
+            if (batchProcess == true) {
 
-        //            //first saving the filename to a text box so that it can be checked before confirming
-        //            PerformertextBox4.Text = folderName;
-        //            ArtistTextBox3.Text = folderName;
-        //            TitletextBox2.Text = fileName;
-        //            AlbumtextBox1.Text = folderName;
+            }
 
-        //            // now putting that value into the tag
-        //            nullChecker(() => tfile.Tag.Performers?.FirstOrDefault() ?? " ", () => tfile.Tag.Performers = new[] { PerformertextBox4.Text }, PerformertextBox4.Text);
+            if (batchProcess == false) {
 
-        //            nullChecker(() => tfile.Tag.AlbumArtists?.FirstOrDefault() ?? " ", () => tfile.Tag.AlbumArtists = new[] { ArtistTextBox3.Text }, ArtistTextBox3.Text);
-
-        //            nullChecker(() => tfile.Tag.Title, () => tfile.Tag.Title = TitletextBox2.Text, TitletextBox2.Text);
-
-        //            nullChecker(() => tfile.Tag.Album, () => tfile.Tag.Album = AlbumtextBox1.Text, AlbumtextBox1.Text);
-
-        //            tfile.Save();
-
-        //        }
-        //        catch (Exception ex) {
-        //            MessageBox.Show($"Error tagging file {filePath}:\n{ex.Message}");
-        //        }
-        //    }
-
-        //    MessageBox.Show("Tagging complete.");
-        //}
+            }
+        }
 
         private void Form1_Load(object sender, EventArgs e)
         {
