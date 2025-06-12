@@ -144,6 +144,7 @@
             GoAllbutton1.TabIndex = 11;
             GoAllbutton1.Text = "Name All";
             GoAllbutton1.UseVisualStyleBackColor = true;
+            GoAllbutton1.Click += GoAllbutton1_Click;
             // 
             // CountLabel
             // 

@@ -28,6 +28,7 @@ namespace MyMp3Renamer
                     FolderNametextBox1.Text = folderPath;
                 }
             }
+            TagInfoToUI(mp3Files[index]);
         }
         private void BeginNaming_button_Click(object sender, EventArgs e)
         {
@@ -43,8 +44,6 @@ namespace MyMp3Renamer
             GoAllbutton1.Text = "Confirm and Next";
 
             GoAlllabel.Text = " Confirm The \n Tag Information";
-
-            TagInfoToUI(mp3Files[index]);
 
             ProcessTagUpdate(mp3Files[index]);
 
@@ -89,12 +88,13 @@ namespace MyMp3Renamer
             }
             if (index >= mp3Files.Length) {
 
+                index = 0;
                 MessageBox.Show("Tagging complete.");
 
             }
         }
 
-
+        // a method which checks if the tag name is correct or the input is null or empty
         private void nullChecker(Func<string> oldName, Action action, string input)
         {
             if (!string.IsNullOrWhiteSpace(input) && oldName() != input) {
@@ -118,16 +118,24 @@ namespace MyMp3Renamer
         private void GoAllbutton1_Click(object sender, EventArgs e)
         {
             if (mp3Files == null || mp3Files.Length == 0) {
+
                 MessageBox.Show("No Files Found!");
                 return;
+
             }
 
             if (batchProcess == true) {
 
+                foreach (var file in mp3Files) {
+
+                    ProcessTagUpdate(file);
+
+                }
             }
 
             if (batchProcess == false) {
 
+                ProcessTagUpdate(mp3Files[index]);
             }
         }
 
