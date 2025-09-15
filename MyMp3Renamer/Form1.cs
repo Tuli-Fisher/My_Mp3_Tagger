@@ -12,7 +12,7 @@ namespace MyMp3Renamer
 
         string[] mp3Files;
         string mp3CountString;
-        int index;
+        int index = 0;
         bool batchProcess = true;
         private void selectBtn_Click(object sender, EventArgs e)
         {
@@ -26,18 +26,22 @@ namespace MyMp3Renamer
                     CountLabel.Text = mp3CountString;
 
                     FolderNametextBox1.Text = folderPath;
+
+                    //put this in the if so that it wont error if no file is picked
+                    TagInfoToUI(mp3Files[index]);
                 }
             }
-            TagInfoToUI(mp3Files[index]);
+            
+            
         }
         private void BeginNaming_button_Click(object sender, EventArgs e)
         {
            if(mp3Files == null || mp3Files.Length == 0) {
-                MessageBox.Show("No Files Found!");
+                MessageBox.Show("No Files Found! Please Choose A File");
                 return;
            }
 
-            index = 0;
+            //index = 0;  already done earlier
 
             batchProcess = false;
 
@@ -79,7 +83,7 @@ namespace MyMp3Renamer
                 MessageBox.Show($"Error tagging file {filePath}:\n{ex.Message}");
             }
 
-            mp3CountString = $" {index++} / {mp3Files.Length} Files Completed";
+            mp3CountString = $" {++index} / {mp3Files.Length} Files Completed";
             CountLabel.Text = mp3CountString;
 
             if (index < mp3Files.Length) {
@@ -90,7 +94,12 @@ namespace MyMp3Renamer
 
                 index = 0;
                 MessageBox.Show("Tagging complete.");
-
+                mp3Files = null;
+                FolderNametextBox1.Clear();
+                PerformertextBox4.Clear();
+                ArtistTextBox3.Clear();
+                TitletextBox2.Clear();
+                AlbumtextBox1.Clear();
             }
         }
 
